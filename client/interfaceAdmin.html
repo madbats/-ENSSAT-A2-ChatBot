@@ -7,13 +7,42 @@
 	<title>ChatBot</title>
 	<link rel="stylesheet" href="./assets/styles/semantic.min.css" />
 	<link rel="stylesheet" href="./assets/styles/style.css" />
+	<style>
+        body {
+            padding: 50px;
+        }
+    </style>
 </head>
 
-<body>
+<body class="container">
 	<header>
-		<h1>Géré Bot</h1>
+		<h1>Géré Bots</h1>
 	</header>
-	<main></main>
+	<main class="ui segment">
+		<form>
+			<label for="bot-name">Nom</label>
+			<input type="text" id="bot-name" name="bot-name">
+		</br>
+			<label for="bot-template">Cerveau</label>
+			<select id="bot-template" name="bot-template">
+				<option value="null">--Selectionner un cerveau--</option>
+				<option value="0">Test 1</option>
+				<option value="1">Test 2</option>
+			</select>
+		</br>
+			<fieldset>
+				<legend>Interface de communication</legend>
+				<label for="bot-interface-local">Local Chat</label>
+				<input type="radio" id="bot-interface-local" name="bot-interface" value="local">
+				<br>
+				<label for="bot-interface-discord">Discord</label>
+				<input type="radio" id="bot-interface-discord" name="bot-interface" value="local">
+			</fieldset>
+
+			<input type="submit">
+		</form>
+		
+	</main>
 	<footer>
 	</footer>
 </body>
