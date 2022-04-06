@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest"
   },
-  "author": "Matthieu ROCHARD & Loïc CONAN",
+  "author": "Matthieu ROCHARD & Camille NICOLAS",
   "license": "ISC",
   "dependencies": {
     "cros": "^1.0.1",

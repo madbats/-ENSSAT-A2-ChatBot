@@ -10,7 +10,7 @@
   "keywords": [
     "ChatBot"
   ],
-  "author": "Matthieu ROCHARD & Loîc CONAN",
+  "author": "Matthieu ROCHARD & Camille NICOLAS",
   "license": "ISC",
   "dependencies": {
     "cros": "^1.0.1",
