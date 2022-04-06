@@ -4,18 +4,29 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<title>ChatBot</title>
+
 	<link rel="stylesheet" href="./assets/styles/semantic.min.css" />
 	<link rel="stylesheet" href="./assets/styles/style.css" />
+
+	<script src="Com.js"></script>
 </head>
 
 <body>
 	<header>
 		<h1>Discussion avec bot</h1>
 	</header>
-	<main></main>
-	<footer>
-	</footer>
+	
+	<div class="chat">
+		<div class="messages"></div>
+		<div id="edge"></div>
+
+		<form class="actions">
+			<input type="text" placeholder="Appuyer sur 'Entrer' pour envoyer...">
+		</form>
+	</div>
+
 </body>
 
 </html>

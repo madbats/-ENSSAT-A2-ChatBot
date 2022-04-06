@@ -25,11 +25,11 @@ CRUD
 : Create,Read,Update,Destroy
 
 - [ ] API REST CRUD pour permettre la gestion de bot
-- [ ] API pour envoyer un message au bot et recevoir une réponse
+- [ Camille ] API pour envoyer un message au bot et recevoir une réponse
 - [ ] API REST CRUD pour permettre la gestion d'Utilisateur
 - [ ] API pour permettre l'authentification d'un Utilisateur
 - [ ] Back-end mise à disposition d'un bot pour communication via interface
-- [ ] Front-end interface de communication avec bot
+- [ Camille ] Front-end interface de communication avec bot
 - [ ] Front-end interface d'administration de bot
 - [ ] Back-end sauvegarde de profil d'utilisateur pour un bot
 - [ ] Back-end communication DISCORD
