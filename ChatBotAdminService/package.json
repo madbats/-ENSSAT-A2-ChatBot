@@ -1,0 +1,21 @@
+{
+  "name": "chatbotadminservice",
+  "version": "1.0.0",
+  "description": "Back-End d'un service de ChatBot, gère les ChatBot (création,suppression, modifiaction",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "jest",
+    "nodemon": "nodemon index.mjs"
+  },
+  "keywords": [
+    "ChatBot"
+  ],
+  "author": "Matthieu ROCHARD & Loîc CONAN",
+  "license": "ISC",
+  "dependencies": {
+    "cros": "^1.0.1",
+    "express": "^4.17.3",
+    "lowdb": "^3.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
