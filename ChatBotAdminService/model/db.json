@@ -1,0 +1,9 @@
+{
+  "bots": [{
+    "id": 0,
+    "name": "Sans Nom",
+    "template": "standard",
+    "interface": "local",
+    "userProfiles": {}
+  }]
+}
