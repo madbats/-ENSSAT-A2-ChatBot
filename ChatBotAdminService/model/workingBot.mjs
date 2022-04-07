@@ -34,8 +34,11 @@ class WorkingBot {
 					this.bot.reply(this.userProfile, message).then((r) => {
 						reply = r;
 						console.log(reply);
-						this.bot.getUservars(this.userProfile).then((p) => this.botProfile[this.userProfile] = p);
-						resolve(reply);
+						this.bot.getUservars(this.userProfile).then((vars) => {
+							this.botProfile.userProfiles[this.userProfile] = vars;
+							resolve(reply, this.botProfile);
+						});
+						resolve(reply, this.botProfile);
 					}).catch((err) => reject(err));
 					// update users profile with this bot
 
@@ -44,8 +47,10 @@ class WorkingBot {
 				console.log('Replying');
 				reply = this.bot.reply(this.userProfile, message);
 				// update users profile with this bot
-				this.botProfile[this.userProfile] = this.bot.getUservars(this.userProfile);
-				resolve(reply);
+				this.bot.getUservars(this.userProfile).then((vars) => {
+					this.botProfile.userProfiles[this.userProfile] = vars;
+					resolve(reply, this.botProfile);
+				});
 			}
 		});
 	}

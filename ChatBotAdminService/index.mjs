@@ -123,14 +123,14 @@ app.patch('/:id', async (req, res) => {
 				let login = req.body.login;
 				if (login != undefined && isString(login)) {
 					workingBots[id] = new WorkingBot(bot, login);
-					// workingBots[id].loadBot();
 				} else {
 					//not the expected parameter
 					res.status(400).send('BAD REQUEST');
 				}
 			}
 			try {
-				workingBots[id].reply(message).then((reply) => {
+				workingBots[id].reply(message).then((reply, bot) => {
+					botServiceInstance.updateBot(id, bot);
 					res.status(200).json(reply);
 				});
 

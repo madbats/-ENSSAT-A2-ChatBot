@@ -1,9 +1,56 @@
 {
-  "bots": [{
-    "id": 0,
-    "name": "Sans Nom",
-    "template": "standard",
-    "interface": "local",
-    "userProfiles": {}
-  }]
+  "bots": [
+    {
+      "id": 0,
+      "name": "Sans Nom",
+      "template": "standard",
+      "interface": "local",
+      "userProfiles": {
+        "matt": {
+          "topic": "random",
+          "__initialmatch__": null,
+          "__history__": {
+            "input": [
+              "what is my name",
+              "my name is matthieu",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ],
+            "reply": [
+              "Your name is Matthieu.",
+              "Nice to meet you, Matthieu.",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ]
+          },
+          "__lastmatch__": "my name is *",
+          "__last_triggers__": [
+            {
+              "trigger": "my name is *",
+              "reply": [
+                "<set name=<formal>>Nice to meet you, <get name>.",
+                "<set name=<formal>><get name>, nice to meet you."
+              ],
+              "condition": [],
+              "redirect": null,
+              "previous": null
+            }
+          ],
+          "name": "Matthieu"
+        }
+      }
+    }
+  ]
 }

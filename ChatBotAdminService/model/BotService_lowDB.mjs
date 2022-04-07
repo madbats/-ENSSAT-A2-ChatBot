@@ -55,6 +55,26 @@ class BotService {
 		throw new Error(`cannot find bot of id ${id}`);
 	}
 
+	//from PATCH
+	async updateBot(id, anObject) {
+		let index = this.db.data.bots.findIndex(e => e.id == id);
+		if (index > -1) {
+			//At this point, you may have a safeguard to verify if the fields of the given Object are from a Bot
+
+			for (let property in anObject) {
+				if (!Bot.isValidProperty(property, anObject[property])) {
+					throw new Error(`given property is not a valid Bot property : ${anObject}`);
+				}
+			}
+			//At this point, we are sure that all properties are valid and that we can make the update.
+			for (let property in anObject) {
+				(this.db.data.bots)[index][property] = anObject[property];
+			}
+		}
+		await this.db.write();
+		return "Done UPDATING";
+	}
+
 	async removeBot(id) {
 		let index = this.db.data.bots.findIndex(e => e.id == id);
 		if (index > -1) {
