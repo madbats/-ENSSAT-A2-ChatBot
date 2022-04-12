@@ -8,13 +8,17 @@
     height: 90%;
     position: fixed;
     overflow: scroll;
+    border-style: solid;
+    border-color: rgb(0, 0, 0);
 }
 
 .actions{
     position: fixed;
     bottom: 0;
     display: block;
-    width: 100%;
+    width: 400px;
+    border-style: solid;
+    border-color: black;
 }
 
 .actions input{
@@ -38,7 +42,7 @@
 .messages .bot {
     text-align: left;
     margin-right: auto;
-    background: rgb(166, 255, 0);
+    background: rgb(152, 216, 32);
     color: black
 }
 
