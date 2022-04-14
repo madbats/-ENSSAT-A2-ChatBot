@@ -1,6 +1,6 @@
 import {
 	Bot
-} from "./Bot.mjs";
+} from './Bot.mjs';
 import {
 	Low,
 	JSONFile
@@ -8,31 +8,28 @@ import {
 
 class BotService {
 	constructor() {
-		this.db = {}
+		this.db = {};
 	}
 
 	static async create() { //since I cannot return a promise in a constructor
 		const service = new BotService();
-		const adapter = new JSONFile("./model/db.json");
+		const adapter = new JSONFile('./model/db.json');
 		service.db = new Low(adapter);
 		await service.db.read();
 		if (service.db.data.bots == undefined) {
-			service.db.data.bots = []
+			service.db.data.bots = [];
 		}
-		service.db.data.bots.forEach(_ => {
-			Bot.id += 1
+		service.db.data.bots.forEach(bot => {
+			Bot.id = (bot.id > Bot.id)? bot.id: Bot.id;
 		});
+		Bot.id++;
 		return service;
 	}
 
 
 	async addBot(anObject) {
 		let newBot;
-		try {
-			newBot = new Bot(anObject);
-		} catch (err) {
-			throw err; //throwing an error inside a Promise
-		}
+		newBot = new Bot(anObject);
 		this.db.data.bots.push(newBot);
 		await this.db.write();
 		return `added bot of id ${newBot.id}`;
@@ -48,7 +45,7 @@ class BotService {
 				/// Just replace it already!
 				this.db.data.bots.splice(index, 1, anObject);
 				await this.db.write();
-				return "Done REPLACING";
+				return 'Done REPLACING';
 			}
 			throw new Error(`given object is not a Bot : ${anObject}`);
 		}
@@ -63,7 +60,7 @@ class BotService {
 
 			for (let property in anObject) {
 				if (!Bot.isValidProperty(property, anObject[property])) {
-					throw new Error(`given property is not a valid Bot property : ${anObject}`);
+					throw new Error(`given property is not a valid Bot property : ${property} ${JSON.stringify(anObject)}`);
 				}
 			}
 			//At this point, we are sure that all properties are valid and that we can make the update.
@@ -72,9 +69,16 @@ class BotService {
 			}
 		}
 		await this.db.write();
-		return "Done UPDATING";
+		return 'Done UPDATING';
 	}
-
+	async updateUserProfiles(id, login, profile) {
+		let index = this.db.data.bots.findIndex(e => e.id == id);
+		if (index > -1) {
+			(this.db.data.bots)[index][login] = profile;
+		}
+		await this.db.write();
+		return 'Done UPDATING';
+	}
 	async removeBot(id) {
 		let index = this.db.data.bots.findIndex(e => e.id == id);
 		if (index > -1) {
@@ -101,4 +105,4 @@ class BotService {
 export {
 	BotService,
 	Bot
-}
+};

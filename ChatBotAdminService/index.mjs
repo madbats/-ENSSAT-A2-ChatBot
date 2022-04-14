@@ -5,18 +5,16 @@ import {
 	BotService
 } from './model/BotService_lowDB.mjs';
 import {
-	WorkingBot
-} from './model/workingBot.mjs';
-
+	Worker
+} from 'worker_threads';
 const app = express();
 
-
+// let w = new Worker('./worker.mjs',{workerData:{id:0,login:'matt'}})
 //// Enable ALL CORS request
 app.use(cors());
 ////
 
 // dictionary of all bots currently in opperation
-var workingBots = {};
 var botServiceInstance;
 const port = 3001;
 
@@ -28,6 +26,7 @@ app.use(bodyParser.json());
 
 // Créer un chatbot
 app.post('/', (req, res) => {
+	req.headers['Content-Type'] = 'application/json';
 	let theBotToAdd = req.body;
 	botServiceInstance
 		.addBot(theBotToAdd)
@@ -42,7 +41,8 @@ app.post('/', (req, res) => {
 });
 // Supprimer un chatbot
 app.delete('/:id', (req, res) => {
-	var id = res.params.id;
+	req.headers['Content-Type'] = 'application/json';
+	var id = req.params.id;
 	if (!isInt(id)) { //Should I propagate a bad parameter to the model?
 		//not the expected parameter
 		res.status(400).send('BAD REQUEST');
@@ -60,7 +60,8 @@ app.delete('/:id', (req, res) => {
 });
 // Modifier un chatbot
 app.put('/:id', (req, res) => {
-	var id = res.params.id;
+	req.headers['Content-Type'] = 'application/json';
+	var id = req.params.id;
 	if (!isInt(id)) { //Should I propagate a bad parameter to the model?
 		//not the expected parameter
 		res.status(400).send('BAD REQUEST');
@@ -100,6 +101,7 @@ app.get('/:id', (req, res) => {
 	} else {
 		try {
 			let myBot = botServiceInstance.getBot(id);
+
 			res.status(200).json(myBot);
 		} catch (err) {
 			console.log(`Error ${err} thrown... stack is : ${err.stack}`);
@@ -108,39 +110,45 @@ app.get('/:id', (req, res) => {
 	}
 });
 
-// Envoyer un message à un chatBot
-app.patch('/:id', async (req, res) => {
+// Crée un un chatBot pour parler
+app.post('/:id', async (req, res) => {
+	req.headers['Content-Type'] = 'application/json';
 	let id = req.params.id;
-	let message = req.body.message;
-	if (!isInt(id) || message == undefined || !isString(message)) {
-		console.log(`not the expected parameter ${typeof id} ${!isInt(id)} ${JSON.stringify(req.body)} ${!isString(message)}`);
+	// let login = req.body.login
+	let login = 'matt';
+	if (!isInt(id) || !isString(login)) {
 		//not the expected parameter
+		console.log(`Bad Request: id is not interger=${!isInt(id)} || login is not String=${!isString(login)} request body=${JSON.stringify(req.body)}`);
 		res.status(400).send('BAD REQUEST');
 	} else {
 		try {
-			let bot = botServiceInstance.getBot(id);
-			if (workingBots[id] == undefined) {
-				let login = req.body.login;
-				if (login != undefined && isString(login)) {
-					workingBots[id] = new WorkingBot(bot, login);
-				} else {
-					//not the expected parameter
-					res.status(400).send('BAD REQUEST');
-				}
-			}
+			botServiceInstance.getBot(id);
 			try {
-				workingBots[id].reply(message).then((reply, bot) => {
-					botServiceInstance.updateBot(id, bot);
-					res.status(200).json(reply);
+				var worker = new Worker('./worker.mjs', {
+					workerData: {
+						id: id,
+						login: login
+					}
 				});
-
+				worker.on('error', (err) => {
+					console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+					throw err;
+				});
+				worker.once('message', (port) => {
+					// const port = 4000 + id * 100 + encode(login);
+	
+					res.status(200).json({
+						link: `http://localhost:${port}`
+					});
+				});
+	
 			} catch (err) {
 				console.log(`Error ${err} thrown... stack is : ${err.stack}`);
-				res.status(500).send('Bot failed to load');
+				res.status(404).send('NOT FOUND');
 			}
 		} catch (err) {
-			console.log(`Error ${err} thrown... stack is : ${err.stack}`);
-			res.status(404).send('NOT FOUND');
+			console.log(`Bot not found : ${id}`);
+			res.status(400).send('BAD REQUEST');
 		}
 	}
 });

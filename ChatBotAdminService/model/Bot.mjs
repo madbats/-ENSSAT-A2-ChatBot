@@ -1,33 +1,41 @@
 class Bot {
-	static id = 0
+	static id = 0;
 
 	constructor(data) {
+		console.log(JSON.stringify(data))
 		if (data.id != undefined) {
-			this.id = data.id
-			Bot.id = (Bot.id > this.id) ? Bot.id : this.id
+			this.id = data.id;
+			Bot.id = (Bot.id > this.id) ? Bot.id : this.id;
 		} else {
-			this.id = Bot.id
+			this.id = Bot.id;
 		}
-		Bot.id += 1
+		Bot.id += 1;
 		if (data.name != undefined) {
-			this.name = data.name
+			this.name = data.name;
 		} else {
-			this.name = 'Sans Nom'
+			this.name = 'Sans Nom';
 		}
 		if (data.template != undefined) {
-			this.template = data.template
+			this.template = data.template;
 		} else {
-			this.template = 'standard'
+			this.template = 'standard';
 		}
 		if (data.interface != undefined) {
-			this.interface = data.interface
+			this.interface = data.interface;
+			if (data.interface == 'discord') {
+				if (data.token != undefined) {
+					this.token = data.token;
+				} else {
+					throw new Error('Discord interface requested without a token');
+				}
+			}
 		} else {
-			this.interface = 'local'
+			this.interface = 'local';
 		}
 		if (data.userProfiles != undefined) {
-			this.userProfiles = data.profiles
+			this.userProfiles = data.profiles;
 		} else {
-			this.userProfiles = {}
+			this.userProfiles = {};
 		}
 	}
 
@@ -42,11 +50,14 @@ class Bot {
 
 	static isValidProperty(propertyName, propertyValue) {
 		if (!this.hasOwnProperty(propertyName)) {
+			console.log('1.');
 			return false;
 		}
 		if (!(typeof this[propertyName] == typeof propertyValue)) {
+			console.log('2.');
 			return false;
 		}
+		console.log('3.');
 		return true;
 	}
 }
@@ -62,7 +73,7 @@ function isString(myVar) {
 }
 
 function isDate(x) {
-	return (null != x) && !isNaN(x) && ("undefined" !== typeof x.getDate);
+	return (null != x) && !isNaN(x) && ('undefined' !== typeof x.getDate);
 }
 
 function isArrayOfStrings(value) {
@@ -75,4 +86,4 @@ function isArrayOfStrings(value) {
 
 export {
 	Bot
-}
+};

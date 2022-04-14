@@ -1,56 +1,40 @@
 {
   "bots": [
     {
-      "id": 0,
-      "name": "Sans Nom",
+      "id": 1,
+      "name": "Ada",
+      "template": "standard",
+      "interface": "discord",
+      "token": "OTYzNDEwMjM1OTMyOTU0NzA1.YlVrsw.WWPGxIxKHhcaiA71DFSCswMBlEM",
+      "userProfiles": {}
+    },
+    {
+      "id": 3,
+      "name": "Sam",
       "template": "standard",
       "interface": "local",
-      "userProfiles": {
-        "matt": {
-          "topic": "random",
-          "__initialmatch__": null,
-          "__history__": {
-            "input": [
-              "what is my name",
-              "my name is matthieu",
-              "undefined",
-              "undefined",
-              "undefined",
-              "undefined",
-              "undefined",
-              "undefined",
-              "undefined",
-              "undefined"
-            ],
-            "reply": [
-              "Your name is Matthieu.",
-              "Nice to meet you, Matthieu.",
-              "undefined",
-              "undefined",
-              "undefined",
-              "undefined",
-              "undefined",
-              "undefined",
-              "undefined",
-              "undefined"
-            ]
-          },
-          "__lastmatch__": "my name is *",
-          "__last_triggers__": [
-            {
-              "trigger": "my name is *",
-              "reply": [
-                "<set name=<formal>>Nice to meet you, <get name>.",
-                "<set name=<formal>><get name>, nice to meet you."
-              ],
-              "condition": [],
-              "redirect": null,
-              "previous": null
-            }
-          ],
-          "name": "Matthieu"
-        }
-      }
+      "userProfiles": {}
+    },
+    {
+      "id": 2,
+      "name": "Tom",
+      "template": "standard",
+      "interface": "local",
+      "userProfiles": {}
+    },
+    {
+      "id": 4,
+      "name": "Seb",
+      "template": "standard",
+      "interface": "local",
+      "userProfiles": {}
+    },
+    {
+      "id": 5,
+      "name": "Log",
+      "template": "standard",
+      "interface": "local",
+      "userProfiles": {}
     }
   ]
 }

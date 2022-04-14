@@ -24,12 +24,11 @@ Permet de géré les ChatBots
 CRUD
 : Create,Read,Update,Destroy
 
-- [ ] API REST CRUD pour permettre la gestion de bot
-- [ Camille ] API pour envoyer un message au bot et recevoir une réponse
-- [ ] API REST CRUD pour permettre la gestion d'Utilisateur
+- [X] API REST CRUD pour permettre la gestion de bot
+- [X] API pour envoyer un message au bot et recevoir une réponse
 - [ ] API pour permettre l'authentification d'un Utilisateur
-- [ ] Back-end mise à disposition d'un bot pour communication via interface
-- [ Camille ] Front-end interface de communication avec bot
+- [X] Back-end mise à disposition d'un bot pour communication via interface
+- [ ] Back-end interface de communication avec bot
 - [ ] Front-end interface d'administration de bot
-- [ ] Back-end sauvegarde de profil d'utilisateur pour un bot
-- [ ] Back-end communication DISCORD
+- [X] Back-end sauvegarde de profil d'utilisateur pour un bot
+- [X] Back-end communication DISCORD
