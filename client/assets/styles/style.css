@@ -4,8 +4,10 @@
 }
 
 .chat{
+    top: 100px;
+    bottom: 60px;
     width: 400px;
-    height: 90%;
+    height: auto;
     position: fixed;
     overflow: scroll;
     border-style: solid;
