@@ -2,7 +2,7 @@ class Bot {
 	static id = 0;
 
 	constructor(data) {
-		console.log(JSON.stringify(data))
+		console.log(JSON.stringify(data));
 		if (data.id != undefined) {
 			this.id = data.id;
 			Bot.id = (Bot.id > this.id) ? Bot.id : this.id;
@@ -20,17 +20,22 @@ class Bot {
 		} else {
 			this.template = 'standard';
 		}
+		if(data.option != undefined){
+			this.option = data.option;
+		}else{
+			this.option = {};
+		}
 		if (data.interface != undefined) {
 			this.interface = data.interface;
-			if (data.interface == 'discord') {
-				if (data.token != undefined) {
-					this.token = data.token;
-				} else {
-					throw new Error('Discord interface requested without a token');
-				}
-			}
 		} else {
 			this.interface = 'local';
+		}
+		if (data.interface == 'discord') {
+			if (data.option.token != undefined) {
+				this.option.token = data.token;
+			} else {
+				throw new Error('Discord interface requested without a token');
+			}
 		}
 		if (data.userProfiles != undefined) {
 			this.userProfiles = data.profiles;

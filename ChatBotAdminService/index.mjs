@@ -114,8 +114,8 @@ app.get('/:id', (req, res) => {
 app.post('/:id', async (req, res) => {
 	req.headers['Content-Type'] = 'application/json';
 	let id = req.params.id;
-	// let login = req.body.login
-	let login = 'matt';
+	let login = req.body.login;
+	// let login = 'matt';
 	if (!isInt(id) || !isString(login)) {
 		//not the expected parameter
 		console.log(`Bad Request: id is not interger=${!isInt(id)} || login is not String=${!isString(login)} request body=${JSON.stringify(req.body)}`);
