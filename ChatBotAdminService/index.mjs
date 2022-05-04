@@ -68,7 +68,7 @@ app.put('/:id', (req, res) => {
 	} else {
 		let newValues = req.body; //the client is responsible for formating its request with proper syntax.
 		botServiceInstance
-			.replaceBot(id, newValues)
+			.updateBot(id, newValues)
 			.then((returnString) => {
 				console.log(returnString);
 				res.status(201).send('All is OK');
