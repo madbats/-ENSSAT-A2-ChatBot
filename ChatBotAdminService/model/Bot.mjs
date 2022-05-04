@@ -53,12 +53,12 @@ class Bot {
 		return false;
 	}
 
-	static isValidProperty(propertyName, propertyValue) {
-		if (!this.hasOwnProperty(propertyName)) {
+	static isValidProperty(aBot,propertyName, propertyValue) {
+		if (!aBot.hasOwnProperty(propertyName)) {
 			console.log('1.');
 			return false;
 		}
-		if (!(typeof this[propertyName] == typeof propertyValue)) {
+		if (!(typeof aBot[propertyName] == typeof propertyValue)) {
 			console.log('2.');
 			return false;
 		}

@@ -59,7 +59,7 @@ class BotService {
 			//At this point, you may have a safeguard to verify if the fields of the given Object are from a Bot
 
 			for (let property in anObject) {
-				if (!Bot.isValidProperty(property, anObject[property])) {
+				if (!Bot.isValidProperty(this.db.data.bots[index],property, anObject[property])) {
 					throw new Error(`given property is not a valid Bot property : ${property} ${JSON.stringify(anObject)}`);
 				}
 			}

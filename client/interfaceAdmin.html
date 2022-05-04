@@ -35,17 +35,18 @@
 		let botListElt;
 		let addNewBotButton;
 		let botList = {}
+		let firstCreate = true
+		let firstUpdate = true
 
 		function init() {
 			botListElt = document.getElementById("bot-list");
 			let createModal = document.getElementById("newBotModal");
 			let updateModal = document.getElementById("updateBotModal");
+			console.log("Init")
 			reloadBotList();
 			//setInterval(reloadList,5000);
 			document.getElementById("newBotButton").addEventListener("click", () => {
-				createModal.style.display = "block";
-				document.getElementById("bot-interface-local").checked = true;
-				handleRadioClick("newBotModal")
+				createNewBot();
 			});
 			radios = createModal.querySelectorAll('input[name="bot-interface"]');
 			radios.forEach(radio => {
@@ -56,13 +57,6 @@
 				radio.setAttribute("onclick", `handleRadioClick("updateBotModal")`);
 			});
 
-			addNewBotButton = document.getElementById("addNewBotButton");
-			addNewBotButton.addEventListener("click", createNewBot);
-			let cancelBotButton = createModal.querySelector("#cancelAddNewBotButton");
-
-			cancelBotButton.addEventListener("click", () => {
-				createModal.style.display = "none"; // Make the modal disapear
-			})
 		}
 
 		function handleRadioClick(modal) {
@@ -74,12 +68,14 @@
 		}
 
 		function reloadBotList() {
+			console.log("Reloading")
 			//first, clean up
 			while (botListElt.firstChild) {
 				botListElt.removeChild(botListElt.firstChild);
 			}
+			botList = {};
 			let myHeaders = new Headers();
-			myHeaders.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+			myHeaders.append('Content-Type', 'application/json');
 			myHeaders.append('Accept', 'application/json');
 			myHeaders.append('Set-Cookie', 'passPhrase=Hop');
 
@@ -95,15 +91,15 @@
 
 			fetch(myURL, myInit)
 				.then((httpResponse) => {
-					for (let field of httpResponse.headers) {
-						console.log(`raw = ${field}`);
-					}
+					// for (let field of httpResponse.headers) {
+					// 	console.log(`raw = ${field}`);
+					// }
 					return httpResponse.json()
 				})
 				.then((setOfBots) => {
 					for (let bot of setOfBots) {
 						botListElt.appendChild(createBotItem(bot));
-						botList[bot.id] = bot
+
 					}
 				})
 				.catch((err) => {
@@ -113,7 +109,7 @@
 
 		function createBotItem(bot) {
 			let item = document.createElement("li");
-
+			botList[bot.id] = bot
 			// Adding a DELETE Button
 			let delBtn = document.createElement("button");
 			delBtn.innerHTML = "DELETE";
@@ -172,7 +168,6 @@
 			let cancelUpdateBotButton = modal.querySelector("#cancelUpdateBotButton");
 			let updateBotButton = modal.querySelector("#updateBotButton");
 
-			modal.querySelector("#bot-interface-local").checked = true;
 			handleRadioClick("updateBotModal")
 			modal.style.display = "block"; // Make the modal disapear
 			cancelUpdateBotButton.addEventListener("click", () => {
@@ -182,49 +177,58 @@
 
 			inputName.value = botList[botId].name
 			inputTemplate.value = botList[botId].template
-			inputInterface.value = botList[botId].interface
-			if (botList[botId].interface == 'discord') {
-				inputReply.value = botList[botId].option.reply
+			if (botList[botId].interface == 'local') {
+				modal.querySelector("#bot-interface-local").checked = true
+			} else {
+				modal.querySelector("#bot-interface-discord").checked = true
+				if (botList[botId].option.reply)
+					modal.querySelector("#bot-reply-mention").checked = true
 				inputToken.value = botList[botId].option.token
 			}
+			handleRadioClick("updateBotModal")
+			if (firstUpdate) {
+				updateBotButton.addEventListener("click", () => {
+					modal.style.display = "none"; // Make the modal disapear
+					//Create the request
+					let usesDiscord = modal.querySelector("#bot-interface-discord").checked
+					let myHeaders = new Headers();
+					myHeaders.append('Content-Type', 'application/json');
+					let payload = {
+						id: botId,
+						name: inputName.value,
+						template: inputTemplate.value,
+						interface: (usesDiscord) ? 'discord' : 'local',
+						option: {
+							token: (usesDiscord) ? inputToken.value : "",
+							reply: (usesDiscord) ? inputToken.reply : ""
+						}
+					};
+					let myBody = JSON.stringify(payload);
+					let myInit = {
+						method: 'PUT',
+						headers: myHeaders,
+						mode: 'cors',
+						cache: 'default',
+						body: myBody
+					};
+					let myURL = `http://localhost:3001/${botId}`;
 
-			updateBotButton.addEventListener("click", () => {
-				modal.style.display = "none"; // Make the modal disapear
-				//Create the request
-				let myHeaders = new Headers();
-				myHeaders.append('Content-Type', 'application/json');
-				let payload = {
-					name: inputName.value,
-					template: inputTemplate.value,
-					interface: inputInterface.value,
-					option: {
-						token: inputToken.value,
-						reply: inputReply.value
-					}
-				};
-				let myBody = JSON.stringify(payload);
-				let myInit = {
-					method: 'PUT',
-					headers: myHeaders,
-					mode: 'cors',
-					cache: 'default',
-					body: myBody
-				};
-				let myURL = "http://localhost:3001/";
-
-				//launch the request
-				fetch(myURL, myInit)
-					.then((httpResponse) => {
-						return httpResponse.text();
-					})
-					.then((responseBody) => {
-						reloadBotList();
-						console.log(`response is ${responseBody}`);
-					})
-					.catch((err) => {
-						console.log(`ERROR : ${err}`);
-					})
-			});
+					//launch the request
+					fetch(myURL, myInit)
+						.then((httpResponse) => {
+							return httpResponse.text();
+						})
+						.then((responseBody) => {
+							console.log("Update")
+							reloadBotList();
+							console.log(`response is ${responseBody}`);
+						})
+						.catch((err) => {
+							console.log(`ERROR : ${err}`);
+						})
+				});
+				firstUpdate = false
+			}
 		}
 
 		function createNewBot() {
@@ -237,45 +241,69 @@
 			let inputReply = modal.querySelector("input[name='bot-reply']:checked");
 			let addNewBotButton = modal.querySelector("#addNewBotButton");
 
+			document.getElementById("bot-interface-local").checked = true;
+			handleRadioClick("newBotModal")
 
-			modal.style.display = "none"; // Make the modal disapear
+			inputName.value = ""
+			inputTemplate.value = "Standard"
+			modal.querySelector("#bot-interface-local").checked = true
+
+			modal.querySelector("#bot-reply-mention").checked = true
+			inputToken.value = ""
+
+
+
+			modal.style.display = "block"; // Make the modal appear
 			//Create the request
-			let myHeaders = new Headers();
-			myHeaders.append('Content-Type', 'application/json');
-			let payload = {
-				name: inputName.value,
-				template: inputTemplate.value,
-				interface: inputInterface.value,
-				option: {
-					token: inputToken.value,
-					reply: inputReply.value
-				}
-			};
-			let myBody = JSON.stringify(payload);
-			let myInit = {
-				method: 'POST',
-				headers: myHeaders,
-				mode: 'cors',
-				cache: 'default',
-				body: myBody
-			};
-			let myURL = "http://localhost:3001/";
 
-			//launch the request
-			fetch(myURL, myInit)
-				.then((httpResponse) => {
-					return httpResponse.text();
+
+			addNewBotButton = modal.querySelector("#addNewBotButton");
+			if (firstCreate) {
+				addNewBotButton.addEventListener("click", () => {
+					modal.style.display = "none"; // Make the modal disapear
+					let myHeaders = new Headers();
+					myHeaders.append('Content-Type', 'application/json');
+					let payload = {
+						name: inputName.value,
+						template: inputTemplate.value,
+						interface: inputInterface.value,
+						option: {
+							token: inputToken.value,
+							reply: inputReply.value
+						}
+					};
+					let myBody = JSON.stringify(payload);
+					let myInit = {
+						method: 'POST',
+						headers: myHeaders,
+						mode: 'cors',
+						cache: 'default',
+						body: myBody
+					};
+					let myURL = "http://localhost:3001/";
+
+					//launch the request
+					fetch(myURL, myInit)
+						.then((httpResponse) => {
+							return httpResponse.text();
+						})
+						.then((responseBody) => {
+							console.log("Create")
+							reloadBotList();
+							//clear fields
+							console.log(`response is ${responseBody}`);
+						})
+						.catch((err) => {
+							console.log(`ERROR : ${err}`);
+						})
+				});
+
+				let cancelBotButton = modal.querySelector("#cancelAddNewBotButton");
+				cancelBotButton.addEventListener("click", () => {
+					modal.style.display = "none"; // Make the modal disapear
 				})
-				.then((responseBody) => {
-					reloadBotList();
-					//clear fields
-					inputTitle.value = "";
-					inputStatus.value = "";
-					console.log(`response is ${responseBody}`);
-				})
-				.catch((err) => {
-					console.log(`ERROR : ${err}`);
-				})
+				firstCreate = false
+			}
 		}
 	</script>
 </head>
@@ -290,6 +318,13 @@
 		<a href="/interfaceCom.html">Communication</a>
 	</nav>
 	<main class="ui segment">
+		<div class="modal">
+			<div class="modal-content">
+				<h3 for="login">Nom</h3>
+				<input type="text" id="login" name="login" placeholder="Login">
+				<input type="password" id="password" name="password" placeholder="Password">
+			</div>
+		</div>
 		<button id="newBotButton">Create Chatbot</button>
 		<ul id="bot-list">
 
