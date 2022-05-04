@@ -21,16 +21,18 @@
 	<div>
 		<label for="bots">Choisissez un bot:</label>
 		<select name="bots" id="listeBot"></select>
+		<option></option>
 		<button id="refreshBot" type="button">Rafraîchir liste de bots</button>
 	</div>
 	
 	<div class="chat">
 		<div class="messages" id="messages"></div>
 		<div id="edge"></div>
+	</div>
 
-		<form class="actions" id="form" autocomplete="off">
-			<input id="input" type="text" placeholder="Appuyer sur 'Entrer' pour envoyer...">
-		</form>
+	<div class="actions">
+		<input id="input" type="text" placeholder="Ecrivez votre message...">
+		<button id="sendMessageButton" type="button">Envoyer le message</button>
 	</div>
 
 </body>

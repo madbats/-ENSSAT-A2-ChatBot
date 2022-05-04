@@ -64,7 +64,7 @@ function isString(myVar) {
 
 
 bot.loadBot();
-
+var port = 4000 + id * 100 + encode(login);
 if (basicBot.interface == 'local') {
 	app.patch('/', async (req, res) => {
 		req.headers['content-type'] = 'application/json';
@@ -99,12 +99,9 @@ if (basicBot.interface == 'local') {
 
 	});
 
-	var port = 4000 + id * 100 + encode(login);
+	
 	app.listen(port, () => {
 		console.log(`Bot listening at http://localhost:${port}`);
 	});
-
-}else{
-	
-	parentPort.postMessage(3001);
 }
+parentPort.postMessage(port);
