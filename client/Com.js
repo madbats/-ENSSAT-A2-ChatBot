@@ -5,11 +5,11 @@ document.addEventListener('DOMContentLoaded',init);
 let message_container;
 let input;
 let sendM;
-let listeBot;
-let refresh;
-let listeIDBot;
-let comLinks;
-let choice;
+let listeBot;  //Liste déroulante avec les noms des bots
+let refresh;   //Bouton pour rafraichir la liste des chatbots
+let listeIDBot=[];//Liste contenant les id des bots. L'index de l'id et l'index du bot associé ầ celui ci correspondent.
+let comLinks;  //Liste des liens permettant de communique avec les chatbots
+let choice;    //Index du bot sélectionné dans la liste déroulante
 
 //Fonctions
 
@@ -33,7 +33,7 @@ function init(){
     input.addEventListener('keydown', ifEnter);
 
     //Si l'utilisateur quitte la page, on envoie ferme les chatbots
-    document.addEventListener('beforeunload', closeBots);
+    document.addEventListener('beforeunload', supprBots);
 }
 
 
@@ -46,7 +46,14 @@ function init(){
  */
 function recupBots()
 {
-    //On commence en vidant la liste déroulante (pour ne pas avoir de doublons)
+    //On commence par supprimer les chatbots existant pour ne pas causer de problème quand on sélectionnera un bot avec lequel communiquer.
+    for (let i of listeIDBot)
+    {
+        supprBot(i);
+    }
+    console.log("fin de la suppression des communications actives");
+
+    //On vide ensuite la liste déroulante (pour ne pas avoir de doublons)
     listeBot.innerHTML = "<option></option>";
     listeIDBot = [];
     comLinks = [];
@@ -103,7 +110,7 @@ function changeBot()
     if (choice > 0)//Si un bot est sélectionné
     {
         
-        if (comLinks[choice-1] == -1)//Si un chatBot avec ce bot n'existe pas encore, on le crée
+        if (comLinks[choice-1] == -1)//Si un chatBot avec ce bot n'existe pas déjà, on le crée
         {
             console.log("on crée un nouveau chatbot");
             let idBot = listeIDBot[choice-1];
@@ -127,7 +134,6 @@ function changeBot()
             };
 
             let myURL = `http://localhost:3001/${idBot}`;//URL pour obtenir la liste des bots
-            console.log("tfefef")
             fetch(myURL,myInit)
                 .then((httpResponse)=>{
                     return httpResponse.json()
@@ -170,7 +176,7 @@ function newUserMessage()
     console.log("Event 'submit' détecté");
     
     
-    if (choice>0)
+    if (choice>0)//Si un bot est sélectionné 
     {
         //On ajoute le message de l'utilisateur dans la "file" des messages
         message_container.innerHTML += `<div class="self">${input.value}</div>`;
@@ -180,7 +186,7 @@ function newUserMessage()
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         let payload = {
-                message:input.value,
+                message:input.value
         };
         console.log(`La tâche est assignée à :${payload.assignement}`);
         let myBody = JSON.stringify(payload);
@@ -214,18 +220,58 @@ function newUserMessage()
     input.value='';
 }
 
-/**
- * Ferme tous les chatBots ouvert
- */
-function closeBots()
-{
-//à faire
-}
+
 
 /**
  * Ferme un chat bot particulier
+ * ATTENTION: On souhaite couper la communication, pas supprimer le chatBot en lui même.
+ * (pour fermer tous les chatbots, il suffit de fermer chaque bot à l'aide de listeIDBot)
  */
-function close1Bot(id)
+function supprBot(idBot)
 {
-//à faire
+    //On commence par récupérer dans listeIDBot l'index correspondant
+    index = listeIDBot.lastIndexOf(idBot);
+    
+    //On commence par créer le message à envoyer
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    let myInit = { 
+        method: 'DELETE',
+        headers: myHeaders,
+        mode: 'cors',
+        cache: 'default',
+    };
+    //On envoie la requête et on réagit à la réponse
+    let myURL = comLinks[index];//On utilise le lien reçu lors de la création du chatBot
+    fetch(myURL,myInit)
+    .then((httpResponse)=>{
+        return httpResponse.json();
+    })
+    .then((responseBody)=>{//Que fait on avec la réponse du serveur.
+        if (responseBody.ok)//Si la requête retourne un succès
+        {//Alors la communication avec le bot a été supprimée.
+            //On supprime de Comlink, listeIDBot et de listeBot le chatbot qui a été supprimé
+            listeBot.splice(index, 1);
+            listeIDBot.splice(index, 1);
+            comLinks.splice(index, 1);
+        }
+    })
+    .catch((err)=>{
+        console.log(`ERROR : ${err}`);
+    })
+}
+
+/**
+ * Cette fonction ferme toutes les communications avec les chatbots
+ * Elle n'est appelée qu'à la fermeture de la page.
+ * à faire
+ */
+function supprBots()
+{
+    //On supprime les communications existantes avec les chatbots.
+    for (let i of listeIDBot)
+    {
+        supprBot(i);
+    }
+    console.log("fin de la suppression des communications actives");
 }
