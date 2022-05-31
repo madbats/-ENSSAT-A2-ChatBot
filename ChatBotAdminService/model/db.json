@@ -1,8 +1,8 @@
 {
   "bots": [
     {
-      "id": 1,
-      "name": "MY",
+      "id": 7,
+      "name": "Darth Vader",
       "template": "standard",
       "option": {
         "token": "",
@@ -10,165 +10,19 @@
       },
       "interface": "local",
       "userProfiles": {},
-      "user": {
-        "topic": "random",
-        "__initialmatch__": "(what is my name|who am i|do you know my name|do you know who i am){weight=10}",
-        "__history__": {
-          "input": [
-            "what is my name",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined"
-          ],
-          "reply": [
-            "Your name is undefined.",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined"
-          ]
-        },
-        "__lastmatch__": "(what is my name|who am i|do you know my name|do you know who i am){weight=10}",
-        "__last_triggers__": [
-          {
-            "trigger": "(what is my name|who am i|do you know my name|do you know who i am){weight=10}",
-            "reply": [
-              "Your name is <get name>.",
-              "You told me your name is <get name>.",
-              "Aren't you <get name>?"
-            ],
-            "condition": [],
-            "redirect": null,
-            "previous": null
-          }
-        ]
-      }
+      "user": null
     },
     {
-      "id": 2,
-      "name": "Discord",
+      "id": 8,
+      "name": "Malenia",
       "template": "standard",
       "option": {
-        "token": "OTYzNDEwMjM1OTMyOTU0NzA1.GRS9mL.fh-TfWczEb3Twrt1O7QmP663tibHT7_pLn0Gk4",
+        "token": "",
         "reply": "true"
       },
       "interface": "local",
       "userProfiles": {},
-      "user": {
-        "topic": "random",
-        "__initialmatch__": "*",
-        "__history__": {
-          "input": [
-            "try",
-            "try",
-            "try",
-            "try",
-            "try",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined"
-          ],
-          "reply": [
-            "Please go on.",
-            "I'm not sure I understand you fully.",
-            "That is interesting. Please continue.",
-            "That is interesting. Please continue.",
-            "I'm not sure I understand you fully.",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined"
-          ]
-        },
-        "__lastmatch__": "*",
-        "__last_triggers__": [
-          {
-            "trigger": "*",
-            "reply": [
-              "I'm not sure I understand you fully.",
-              "Please go on.",
-              "That is interesting. Please continue.",
-              "Tell me more about that.",
-              "Does talking about this bother you?"
-            ],
-            "condition": [],
-            "redirect": null,
-            "previous": null
-          }
-        ]
-      }
-    },
-    {
-      "id": 4,
-      "name": "Seb",
-      "template": "standard",
-      "interface": "local",
-      "userProfiles": {},
-      "user": {
-        "topic": "random",
-        "__initialmatch__": "(what is my name|who am i|do you know my name|do you know who i am){weight=10}",
-        "__history__": {
-          "input": [
-            "what is my name",
-            "what is your name",
-            "yes",
-            "your name is ploof",
-            "what is your name",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined"
-          ],
-          "reply": [
-            "Your name is undefined.",
-            "You can call me Aiden.",
-            "Why don't you tell me a little more about this.",
-            "Really, my name is ploof?",
-            "You can call me Aiden.",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined",
-            "undefined"
-          ]
-        },
-        "__lastmatch__": "(what is my name|who am i|do you know my name|do you know who i am){weight=10}",
-        "__last_triggers__": [
-          {
-            "trigger": "(what is my name|who am i|do you know my name|do you know who i am){weight=10}",
-            "reply": [
-              "Your name is <get name>.",
-              "You told me your name is <get name>.",
-              "Aren't you <get name>?"
-            ],
-            "condition": [],
-            "redirect": null,
-            "previous": null
-          }
-        ]
-      }
-    },
-    {
-      "id": 5,
-      "name": "Log",
-      "template": "standard",
-      "interface": "local",
-      "userProfiles": {}
+      "user": null
     }
   ]
 }

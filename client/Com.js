@@ -110,6 +110,15 @@ function recupBots()
  */
 function changeBot()
 {
+    //Suppression des anciens messages
+    message_container.innerHTML = '';
+
+    /**Alternative pour supprimer les anciens messages
+     *       while (message_container.firstChild) {
+            message_container.removeChild(message_container.firstChild);
+        }
+     */
+
     console.log("Changement de bot");
     choice = listeBot.selectedIndex;
     console.log(`Valeur de choice : ${choice}`);
@@ -157,7 +166,9 @@ function changeBot()
         else//Si un chatBot avec ce bot existe déjà, on le continue
         {
             console.log("On reprend la communication avec un bot");
+
         }
+  
     }
     //Si aucun bot n'est sélectionné (choix blanc)
 }
