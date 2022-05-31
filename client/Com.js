@@ -10,6 +10,7 @@ let refresh;   //Bouton pour rafraichir la liste des chatbots
 let listeIDBot=[];//Liste contenant les id des bots. L'index de l'id et l'index du bot associé ầ celui ci correspondent.
 let comLinks;  //Liste des liens permettant de communique avec les chatbots
 let choice;    //Index du bot sélectionné dans la liste déroulante
+let chat;
 
 //Fonctions
 
@@ -18,7 +19,8 @@ function init(){
     input = document.getElementById("input");
     sendM = document.getElementById("sendMessageButton");
     listeBot = document.getElementById("listeBot");
-    refresh = document.getElementById("refreshBot")
+    refresh = document.getElementById("refreshBot");
+    chat = document.getElementById("chat");
 
     //Lors de l'initialisation de la page, on récupère la liste des bots une première fois de manière automatique
     recupBots();
@@ -34,6 +36,7 @@ function init(){
 
     //Si l'utilisateur quitte la page, on envoie ferme les chatbots
     window.addEventListener('unload', supprBots);
+
 }
 
 
@@ -183,6 +186,8 @@ function newUserMessage()
     {
         //On ajoute le message de l'utilisateur dans la "file" des messages
         message_container.innerHTML += `<div class="self">${input.value}</div>`;
+        //On descend tout en bas de la barre déroulante
+        chat.scrollBy(0,1000);
 
         //On envoie au serveur le message de l'utilisateur
         //Create the request
@@ -210,6 +215,8 @@ function newUserMessage()
         .then((responseBody)=>{//Que fait on avec la réponse du serveur.
             //On affiche la réponse du bot
             message_container.innerHTML += `<div class="bot">${responseBody}</div>`;
+            //On descend tout en bas de la barre déroulante
+            chat.scrollBy(0,1000);
         })
         .catch((err)=>{
             console.log(`ERROR : ${err}`);
