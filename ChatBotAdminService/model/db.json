@@ -2,16 +2,12 @@
   "bots": [
     {
       "id": 1,
-      "name": "Ada",
+      "name": "MY",
       "template": "standard",
-      "interface": "discord",
-      "token": "OTYzNDEwMjM1OTMyOTU0NzA1.YlVrsw.WWPGxIxKHhcaiA71DFSCswMBlEM",
-      "userProfiles": {}
-    },
-    {
-      "id": 3,
-      "name": "Sam",
-      "template": "standard",
+      "option": {
+        "token": "",
+        "reply": "true"
+      },
       "interface": "local",
       "userProfiles": {},
       "user": {
@@ -61,8 +57,12 @@
     },
     {
       "id": 2,
-      "name": "Tom",
+      "name": "Discord",
       "template": "standard",
+      "option": {
+        "token": "OTYzNDEwMjM1OTMyOTU0NzA1.GRS9mL.fh-TfWczEb3Twrt1O7QmP663tibHT7_pLn0Gk4",
+        "reply": "true"
+      },
       "interface": "local",
       "userProfiles": {},
       "user": {

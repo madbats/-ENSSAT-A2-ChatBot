@@ -13,15 +13,20 @@ class BotInterface extends BotInterface_Basic {
 
 
 	async loadBot() {
+		console.log('Loading...');
 		super.loadBot();
+		console.log('...Loading...');
 		this.client = new Client({
 			intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
 		});
+		
+		console.log('...Client...');
 		// When the client is ready, run this code (only once)
 		this.client.once('ready', () => {
 			console.log('Ready!');
 		});
 
+		console.log('...Messages...');
 		this.client.on('messageCreate', async interaction => {
 
 			if (interaction.author.bot) return;
@@ -41,8 +46,10 @@ class BotInterface extends BotInterface_Basic {
 				});
 			}
 		});
+		
+		console.log('...Loaded');
 		// Login to Discord with your client's token
-		this.client.login(this.botProfile.token);
+		this.client.login(this.botProfile.option.token);
 	}
 
 	async close() {

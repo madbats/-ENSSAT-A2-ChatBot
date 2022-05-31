@@ -50,6 +50,11 @@ app.delete('/:id', (req, res) => {
 		botServiceInstance.removeBot(id)
 			.then((returnString) => {
 				console.log(returnString);
+				if(botServiceInstance.getBot(id).interface == 'discord'){
+					if(discordBots[id] != undefined){
+						discordBots[id].postMessage('close');
+					}
+				}
 				res.status(201).send('All is OK');
 			})
 			.catch((err) => {
@@ -71,6 +76,33 @@ app.put('/:id', (req, res) => {
 			.updateBot(id, newValues)
 			.then((returnString) => {
 				console.log(returnString);
+				let bot = botServiceInstance.getBot(id);
+				// SI le bot modifier est devenu ou est un discord bot alors il faut lancer/relancer l'interface de communication
+				if(bot.interface == 'discord'){
+					console.log('Launching discordBot');
+					if(discordBots[id] != undefined){
+						discordBots[id].postMessage('update');
+					}else{
+						try {
+							var worker = new Worker('./worker.mjs', {
+								workerData: {
+									id: bot.id
+								}
+							});
+							worker.on('error', (err) => {
+								console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+								throw err;
+							});
+							worker.once('message', (port) => {
+								// const port = 4000 + id * 100 + encode(login);
+								discordBots[bot.id] = worker;
+							});
+				
+						} catch (err) {
+							console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+						}
+					}
+				}
 				res.status(201).send('All is OK');
 			})
 			.catch((err) => {
@@ -122,29 +154,29 @@ app.post('/:id', async (req, res) => {
 		res.status(400).send('BAD REQUEST');
 	} else {
 		try {
-			botServiceInstance.getBot(id);
-			try {
-				var worker = new Worker('./worker.mjs', {
-					workerData: {
-						id: id,
-						login: login
-					}
-				});
-				worker.on('error', (err) => {
-					console.log(`Error ${err} thrown... stack is : ${err.stack}`);
-					throw err;
-				});
-				worker.once('message', (port) => {
-					// const port = 4000 + id * 100 + encode(login);
-	
-					res.status(200).json({
-						link: `http://localhost:${port}`
+			// Seul les bot communiquant via l'interface local peuvent être lancer ce cette manière
+			if(botServiceInstance.getBot(id).interface == 'local'){
+				try {
+					var worker = new Worker('./worker.mjs', {
+						workerData: {
+							id: id,
+							login: login
+						}
 					});
-				});
-	
-			} catch (err) {
-				console.log(`Error ${err} thrown... stack is : ${err.stack}`);
-				res.status(404).send('NOT FOUND');
+					worker.on('error', (err) => {
+						console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+						throw err;
+					});
+					worker.once('message', (port) => {
+						// const port = 4000 + id * 100 + encode(login);
+						res.status(200).json({
+							link: `http://localhost:${port}`
+						});
+					});
+				} catch (err) {
+					console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+					res.status(404).send('NOT FOUND');
+				}
 			}
 		} catch (err) {
 			console.log(`Bot not found : ${id}`);
@@ -153,13 +185,36 @@ app.post('/:id', async (req, res) => {
 	}
 });
 
+let discordBots = {};
+
 BotService.create().then(ts => {
 	botServiceInstance = ts;
-	// botServiceInstance
-	// 	.addBot(['bob'])
-	// 	.catch((err) => {
-	// 		console.log(err);
-	// 	});
+	// Lance les bots discord 
+	let bots = ts.getBots();
+	bots.forEach(bot => {
+		if (bot.interface == 'discord'){
+			console.log('Launching discordBot');
+			try {
+				var worker = new Worker('./worker.mjs', {
+					workerData: {
+						id: bot.id
+					}
+				});
+				worker.on('error', (err) => {
+					console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+					throw err;
+				});
+				worker.once('message', (port) => {
+					// const port = 4000 + id * 100 + encode(login);
+					console.log('Launched');
+					discordBots[bot.id] = worker;
+				});
+	
+			} catch (err) {
+				console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+			}
+		}
+	});
 	app.listen(port, () => {
 		console.log(`Example app listening at http://localhost:${port}`);
 	});

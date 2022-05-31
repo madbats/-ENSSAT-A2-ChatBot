@@ -32,24 +32,16 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 const id = workerData.id;
-const login = workerData.login;
+
 var botService = await BotService.create();
 var basicBot = botService.getBot(id);
+const login = (basicBot.interface == 'discord') ? 'user' : workerData.login;
 var bot;
-if (basicBot.interface == 'discord') {
-	console.log('Creating DiscordBot');
-	const {
-		BotInterface
-	} = await import('./model/BotInterface_Discord.mjs');
-	bot = new BotInterface(basicBot, login);
-} else {
-	console.log('Creating StandardBot');
-	const {
-		BotInterface
-	} = await import('./model/BotInterface_Standard.mjs');
-	bot = new BotInterface(basicBot, login);
-}
-
+const {
+	BotInterface
+} = (basicBot.interface == 'discord') ? await import('./model/BotInterface_Discord.mjs') : await import('./model/BotInterface_Standard.mjs');
+	
+bot = new BotInterface(basicBot, login);
 
 
 
@@ -81,27 +73,57 @@ if (basicBot.interface == 'local') {
 		}
 	});
 
-	app.get('/', async (req, res) => {
-		res.status(200).json(bot);
+}
+app.get('/', async (req, res) => {
+	res.status(200).json(bot);
+});
+
+app.delete('/', async (req, res) => {
+	console.log('Closing BotInterface');
+	bot.getUservars().then((vars) => {
+		console.log(JSON.stringify(vars));
+		botService.updateUserProfiles(id, login, vars).then(async () => {
+			await bot.close();
+			res.status(200).send('DONE');
+			console.log('And out !');
+			process.exit();
+		});
 	});
 
-	app.delete('/', async (req, res) => {
+});
+
+
+app.listen(port, () => {
+	console.log(`Bot listening at http://localhost:${port}`);
+});
+parentPort.postMessage(port);
+
+parentPort.on('message',(msg)=>{
+	if (msg == 'close'){
 		console.log('Closing BotInterface');
 		bot.getUservars().then((vars) => {
 			console.log(JSON.stringify(vars));
 			botService.updateUserProfiles(id, login, vars).then(async () => {
 				await bot.close();
-				res.status(200).send('DONE');
 				console.log('And out !');
 				process.exit();
 			});
 		});
-
-	});
-
-	
-	app.listen(port, () => {
-		console.log(`Bot listening at http://localhost:${port}`);
-	});
-}
-parentPort.postMessage(port);
+	}
+	else if (msg == 'update'){		
+		console.log('Updating BotInterface');
+		bot.getUservars().then((vars) => {
+			console.log(JSON.stringify(vars));
+			botService.updateUserProfiles(id, login, vars).then(async () => {
+				await bot.close();
+				console.log('And out !');
+				var basicBot = botService.getBot(id);
+				
+				bot = new BotInterface(basicBot,login);
+				
+				bot.loadBot();
+			});
+		});
+		
+	}
+});

@@ -232,7 +232,7 @@
 		}
 
 		function createNewBot() {
-
+			console.log("Creating Bot")
 			let modal = document.getElementById("newBotModal");
 			let inputName = modal.querySelector("#bot-name");
 			let inputTemplate = modal.querySelector("#bot-template");
@@ -251,7 +251,7 @@
 			modal.querySelector("#bot-reply-mention").checked = true
 			inputToken.value = ""
 
-
+			console.log(inputInterface.value);
 
 			modal.style.display = "block"; // Make the modal appear
 			//Create the request
