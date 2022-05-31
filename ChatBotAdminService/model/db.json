@@ -13,14 +13,16 @@
       "name": "Sam",
       "template": "standard",
       "interface": "local",
-      "userProfiles": {}
+      "userProfiles": {},
+      "user": null
     },
     {
       "id": 2,
       "name": "Tom",
       "template": "standard",
       "interface": "local",
-      "userProfiles": {}
+      "userProfiles": {},
+      "user": null
     },
     {
       "id": 4,
