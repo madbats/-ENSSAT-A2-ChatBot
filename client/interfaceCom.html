@@ -17,11 +17,17 @@
 	<header>
 		<h1>Discussion avec bot</h1>
 	</header>
-
+	<nav>
+		<a href="index.html">Home</a>
+		<a href="interfaceAdmin.html">Admin</a>
+		<a href="interfaceCom.html">Communication</a>
+	</nav>
 	<div>
+		<label for="login">Login</label>
+		<input type="text" name="login" id="login">
 		<label for="bots">Choisissez un bot:</label>
 		<select name="bots" id="listeBot"></select>
-		<option></option>
+		<option></option>		
 		<button id="refreshBot" type="button">Rafraîchir liste de bots</button>
 		<div style="font-size:8pt;">ATTENTION: Rafraîchir la liste des bots coupera toutes les communications en cours.</div>
 	</div>
@@ -31,8 +37,8 @@
 	</div>
 
 	<div class="actions">
-		<input id="input" type="text" placeholder="Ecrivez votre message...">
-		<button id="sendMessageButton" type="button">Envoyer le message</button>
+		<input id="input" type="text" placeholder="Ecrivez votre message..." disabled="true">
+		<button id="sendMessageButton" type="button" disabled="true">Envoyer le message</button>
 	</div>
 
 </body>

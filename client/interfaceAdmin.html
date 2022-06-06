@@ -164,7 +164,7 @@
 			let inputTemplate = modal.querySelector("#bot-template");
 			let inputToken = modal.querySelector("#bot-token");
 			let inputInterface = modal.querySelector("input[name='bot-interface']:checked");
-			let inputReply = modal.querySelector("input[name='bot-reply']:checked");
+			// let inputReply = modal.querySelector("input[name='bot-reply']:checked");
 			let cancelUpdateBotButton = modal.querySelector("#cancelUpdateBotButton");
 			let updateBotButton = modal.querySelector("#updateBotButton");
 
@@ -181,8 +181,8 @@
 				modal.querySelector("#bot-interface-local").checked = true
 			} else {
 				modal.querySelector("#bot-interface-discord").checked = true
-				if (botList[botId].option.reply)
-					modal.querySelector("#bot-reply-mention").checked = true
+				// if (botList[botId].option.reply)
+				// 	modal.querySelector("#bot-reply-mention").checked = true
 				inputToken.value = botList[botId].option.token
 			}
 			handleRadioClick("updateBotModal")
@@ -200,7 +200,7 @@
 						interface: (usesDiscord) ? 'discord' : 'local',
 						option: {
 							token: (usesDiscord) ? inputToken.value : "",
-							reply: (usesDiscord) ? inputToken.reply : ""
+							// reply: (usesDiscord) ? inputToken.reply : ""
 						}
 					};
 					let myBody = JSON.stringify(payload);
@@ -237,8 +237,8 @@
 			let inputName = modal.querySelector("#bot-name");
 			let inputTemplate = modal.querySelector("#bot-template");
 			let inputToken = modal.querySelector("#bot-token");
-			let inputInterface = modal.querySelector("input[name='bot-interface']:checked");
-			let inputReply = modal.querySelector("input[name='bot-reply']:checked");
+			
+			// let inputReply = modal.querySelector("input[name='bot-reply']:checked");
 			let addNewBotButton = modal.querySelector("#addNewBotButton");
 
 			document.getElementById("bot-interface-local").checked = true;
@@ -248,10 +248,8 @@
 			inputTemplate.value = "Standard"
 			modal.querySelector("#bot-interface-local").checked = true
 
-			modal.querySelector("#bot-reply-mention").checked = true
+			// modal.querySelector("#bot-reply-mention").checked = true
 			inputToken.value = ""
-
-			console.log(inputInterface.value);
 
 			modal.style.display = "block"; // Make the modal appear
 			//Create the request
@@ -259,7 +257,9 @@
 
 			addNewBotButton = modal.querySelector("#addNewBotButton");
 			if (firstCreate) {
+				
 				addNewBotButton.addEventListener("click", () => {
+					let inputInterface = modal.querySelector("input[name='bot-interface']:checked");
 					modal.style.display = "none"; // Make the modal disapear
 					let myHeaders = new Headers();
 					myHeaders.append('Content-Type', 'application/json');
@@ -269,7 +269,7 @@
 						interface: inputInterface.value,
 						option: {
 							token: inputToken.value,
-							reply: inputReply.value
+							// reply: inputReply.value
 						}
 					};
 					let myBody = JSON.stringify(payload);
@@ -313,9 +313,9 @@
 		<h1>Géré Bots</h1>
 	</header>
 	<nav>
-		<a href="/index.html">Home</a>
-		<a href="/interfaceAdmin.html">Admin</a>
-		<a href="/interfaceCom.html">Communication</a>
+		<a href="index.html">Home</a>
+		<a href="interfaceAdmin.html">Admin</a>
+		<a href="interfaceCom.html">Communication</a>
 	</nav>
 	<main class="ui segment">
 		<div class="modal">
@@ -337,14 +337,13 @@
 				</br>
 				<label for="bot-template">Cerveau</label>
 				<select id="bot-template" name="bot-template">
-					<option value="null">--Selectionner un cerveau--</option>
 					<option value="standard">Standard</option>
 				</select>
 				</br>
 				<fieldset>
 					<legend>Interface de communication</legend>
 					<label for="bot-interface-local">Local Chat</label>
-					<input type="radio" id="bot-interface-local" name="bot-interface" value="local">
+					<input type="radio" id="bot-interface-local" name="bot-interface" value="local" checked="checked">
 					</br>
 					<label for="bot-interface-discord">Discord</label>
 					<input type="radio" id="bot-interface-discord" name="bot-interface" value="discord">
@@ -354,14 +353,14 @@
 						<label for="bot-token">Discord Token</label>
 						<input type="text" id="bot-token" name="bot-token">
 						</br>
-						<fieldset>
+						<!-- <fieldset>
 							<legend>Replies</legend>
 							<label for="bot-reply-mention">Only when mentioned</label>
 							<input type="radio" id="bot-reply-mention" name="bot-reply" value="true">
 							</br>
 							<label for="bot-reply-notMention">Whenever spoken too</label>
 							<input type="radio" id="bot-reply-notMention" name="bot-reply" value="false">
-						</fieldset>
+						</fieldset> -->
 					</fieldset>
 				</fieldset>
 				<button id="addNewBotButton">Add This Bot</button>
@@ -393,14 +392,14 @@
 						<label for="bot-token">Discord Token</label>
 						<input type="text" id="bot-token" name="bot-token">
 						</br>
-						<fieldset>
+						<!-- <fieldset>
 							<legend>Replies</legend>
 							<label for="bot-reply-mention">Only when mentioned</label>
 							<input type="radio" id="bot-reply-mention" name="bot-reply" value="true">
 							</br>
 							<label for="bot-reply-notMention">Whenever spoken too</label>
 							<input type="radio" id="bot-reply-notMention" name="bot-reply" value="false">
-						</fieldset>
+						</fieldset> -->
 					</fieldset>
 				</fieldset>
 				<button id="updateBotButton">Update This Bot</button>

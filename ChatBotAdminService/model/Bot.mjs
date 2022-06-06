@@ -20,9 +20,9 @@ class Bot {
 		} else {
 			this.template = 'standard';
 		}
-		if(data.option != undefined){
+		if (data.option != undefined) {
 			this.option = data.option;
-		}else{
+		} else {
 			this.option = {};
 		}
 		if (data.interface != undefined) {
@@ -32,7 +32,7 @@ class Bot {
 		}
 		if (data.interface == 'discord') {
 			if (data.option.token != undefined) {
-				this.option.token = data.token;
+				this.option.token = data.option.token;
 			} else {
 				throw new Error('Discord interface requested without a token');
 			}
@@ -53,7 +53,8 @@ class Bot {
 		return false;
 	}
 
-	static isValidProperty(aBot,propertyName, propertyValue) {
+	static isValidProperty(aBot, propertyName, propertyValue) {
+		// eslint-disable-next-line no-prototype-builtins
 		if (!aBot.hasOwnProperty(propertyName)) {
 			console.log('1.');
 			return false;
@@ -65,28 +66,6 @@ class Bot {
 		console.log('3.');
 		return true;
 	}
-}
-
-
-function isInt(value) {
-	let x = parseFloat(value);
-	return !isNaN(value) && (x | 0) === x;
-}
-
-function isString(myVar) {
-	return (typeof myVar === 'string' || myVar instanceof String);
-}
-
-function isDate(x) {
-	return (null != x) && !isNaN(x) && ('undefined' !== typeof x.getDate);
-}
-
-function isArrayOfStrings(value) {
-	if (!Array.isArray(value)) return false;
-	for (let item of value) {
-		if (!isString(item)) return false;
-	}
-	return true;
 }
 
 export {

@@ -1,5 +1,6 @@
 import RiveScript from 'rivescript';
 
+// Interface de communication avec bot, destiné a être hérité par des classes spécifique a chaque interface
 class BotInterface_Basic {
 	constructor(botProfile, userLogin) {
 		this.botProfile = botProfile;
@@ -23,13 +24,16 @@ class BotInterface_Basic {
 		return this.bot.reply(this.userProfile, message.replace(/[^a-zA-Z0-9 !?.]/g, '').toLowerCase());
 	}
 
-	async getUservars(){
+	async getUservars() {
 		return this.bot.getUservars(this.userProfile);
 	}
 
-	
-	async close(){
+
+	async close() {
+
 	}
 }
 
-export {BotInterface_Basic};
+export {
+	BotInterface_Basic
+};

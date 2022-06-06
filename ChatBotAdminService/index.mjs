@@ -9,7 +9,6 @@ import {
 } from 'worker_threads';
 const app = express();
 
-// let w = new Worker('./worker.mjs',{workerData:{id:0,login:'matt'}})
 //// Enable ALL CORS request
 app.use(cors());
 ////
@@ -30,8 +29,30 @@ app.post('/', (req, res) => {
 	let theBotToAdd = req.body;
 	botServiceInstance
 		.addBot(theBotToAdd)
-		.then((returnString) => {
-			console.log(returnString);
+		.then((bot) => {
+			console.log(`added bot of id ${bot.id}`);
+			if (bot.interface == 'discord') {
+				console.log('Launching discordBot');
+				try {
+					var worker = new Worker('./worker.mjs', {
+						workerData: {
+							id: bot.id
+						}
+					});
+					worker.on('error', (err) => {
+						console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+						throw err;
+					});
+					worker.once('message', (_port) => {
+						// const port = 4000 + id * 100 + encode(login);
+						console.log('Launched');
+						discordBots[bot.id] = worker;
+					});
+
+				} catch (err) {
+					console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+				}
+			}
 			res.status(201).send('All is OK');
 		})
 		.catch((err) => {
@@ -39,6 +60,7 @@ app.post('/', (req, res) => {
 			res.status(400).send('BAD REQUEST');
 		});
 });
+
 // Supprimer un chatbot
 app.delete('/:id', (req, res) => {
 	req.headers['Content-Type'] = 'application/json';
@@ -50,8 +72,9 @@ app.delete('/:id', (req, res) => {
 		botServiceInstance.removeBot(id)
 			.then((returnString) => {
 				console.log(returnString);
-				if(botServiceInstance.getBot(id).interface == 'discord'){
-					if(discordBots[id] != undefined){
+				// si le bot est de type discord alors il doit être arreté
+				if (botServiceInstance.getBot(id).interface == 'discord') {
+					if (discordBots[id] != undefined) {
 						discordBots[id].postMessage('close');
 					}
 				}
@@ -63,11 +86,12 @@ app.delete('/:id', (req, res) => {
 			});
 	}
 });
+
 // Modifier un chatbot
 app.put('/:id', (req, res) => {
 	req.headers['Content-Type'] = 'application/json';
 	var id = req.params.id;
-	if (!isInt(id)) { //Should I propagate a bad parameter to the model?
+	if (!isInt(id)) {
 		//not the expected parameter
 		res.status(400).send('BAD REQUEST');
 	} else {
@@ -77,12 +101,12 @@ app.put('/:id', (req, res) => {
 			.then((returnString) => {
 				console.log(returnString);
 				let bot = botServiceInstance.getBot(id);
-				// SI le bot modifier est devenu ou est un discord bot alors il faut lancer/relancer l'interface de communication
-				if(bot.interface == 'discord'){
+				// Si le bot modifier est devenu ou est un discord bot alors il faut lancer/relancer l'interface de communication
+				if (bot.interface == 'discord') {
 					console.log('Launching discordBot');
-					if(discordBots[id] != undefined){
+					if (discordBots[id] != undefined) {
 						discordBots[id].postMessage('update');
-					}else{
+					} else {
 						try {
 							var worker = new Worker('./worker.mjs', {
 								workerData: {
@@ -93,11 +117,10 @@ app.put('/:id', (req, res) => {
 								console.log(`Error ${err} thrown... stack is : ${err.stack}`);
 								throw err;
 							});
-							worker.once('message', (port) => {
-								// const port = 4000 + id * 100 + encode(login);
+							worker.once('message', (_port) => {
 								discordBots[bot.id] = worker;
 							});
-				
+
 						} catch (err) {
 							console.log(`Error ${err} thrown... stack is : ${err.stack}`);
 						}
@@ -111,8 +134,9 @@ app.put('/:id', (req, res) => {
 			});
 	}
 });
-// consulter etat des/d'un chatbot
-app.get('/', (req, res) => {
+
+// consulter etat des chatbots
+app.get('/', (_req, res) => {
 	try {
 		let myArrayOfBots;
 		if (undefined == (myArrayOfBots = botServiceInstance.getBots())) {
@@ -125,6 +149,7 @@ app.get('/', (req, res) => {
 	}
 });
 
+// consulter etat d'un chatbot
 app.get('/:id', (req, res) => {
 	let id = req.params.id;
 	if (!isInt(id)) {
@@ -142,12 +167,11 @@ app.get('/:id', (req, res) => {
 	}
 });
 
-// Crée un un chatBot pour parler
+// Crée un chatBot pour parler
 app.post('/:id', async (req, res) => {
 	req.headers['Content-Type'] = 'application/json';
 	let id = req.params.id;
 	let login = req.body.login;
-	// let login = 'matt';
 	if (!isInt(id) || !isString(login)) {
 		//not the expected parameter
 		console.log(`Bad Request: id is not interger=${!isInt(id)} || login is not String=${!isString(login)} request body=${JSON.stringify(req.body)}`);
@@ -155,7 +179,7 @@ app.post('/:id', async (req, res) => {
 	} else {
 		try {
 			// Seul les bot communiquant via l'interface local peuvent être lancer ce cette manière
-			if(botServiceInstance.getBot(id).interface == 'local'){
+			if (botServiceInstance.getBot(id).interface == 'local') {
 				try {
 					var worker = new Worker('./worker.mjs', {
 						workerData: {
@@ -177,6 +201,9 @@ app.post('/:id', async (req, res) => {
 					console.log(`Error ${err} thrown... stack is : ${err.stack}`);
 					res.status(404).send('NOT FOUND');
 				}
+			} else {
+				console.log(`Bot is not local : ${id}`);
+				res.status(400).send('BAD REQUEST');
 			}
 		} catch (err) {
 			console.log(`Bot not found : ${id}`);
@@ -192,7 +219,7 @@ BotService.create().then(ts => {
 	// Lance les bots discord 
 	let bots = ts.getBots();
 	bots.forEach(bot => {
-		if (bot.interface == 'discord'){
+		if (bot.interface == 'discord') {
 			console.log('Launching discordBot');
 			try {
 				var worker = new Worker('./worker.mjs', {
@@ -204,12 +231,12 @@ BotService.create().then(ts => {
 					console.log(`Error ${err} thrown... stack is : ${err.stack}`);
 					throw err;
 				});
-				worker.once('message', (port) => {
+				worker.once('message', (_port) => {
 					// const port = 4000 + id * 100 + encode(login);
 					console.log('Launched');
 					discordBots[bot.id] = worker;
 				});
-	
+
 			} catch (err) {
 				console.log(`Error ${err} thrown... stack is : ${err.stack}`);
 			}

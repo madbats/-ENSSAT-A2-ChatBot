@@ -20,7 +20,7 @@ class BotService {
 			service.db.data.bots = [];
 		}
 		service.db.data.bots.forEach(bot => {
-			Bot.id = (bot.id > Bot.id)? bot.id: Bot.id;
+			Bot.id = (bot.id > Bot.id) ? bot.id : Bot.id;
 		});
 		Bot.id++;
 		return service;
@@ -32,7 +32,7 @@ class BotService {
 		newBot = new Bot(anObject);
 		this.db.data.bots.push(newBot);
 		await this.db.write();
-		return `added bot of id ${newBot.id}`;
+		return newBot;
 	}
 
 
@@ -59,7 +59,7 @@ class BotService {
 			//At this point, you may have a safeguard to verify if the fields of the given Object are from a Bot
 
 			for (let property in anObject) {
-				if (!Bot.isValidProperty(this.db.data.bots[index],property, anObject[property])) {
+				if (!Bot.isValidProperty(this.db.data.bots[index], property, anObject[property])) {
 					throw new Error(`given property is not a valid Bot property : ${property} ${JSON.stringify(anObject)}`);
 				}
 			}
@@ -74,7 +74,7 @@ class BotService {
 	async updateUserProfiles(id, login, profile) {
 		let index = this.db.data.bots.findIndex(e => e.id == id);
 		if (index > -1) {
-			(this.db.data.bots)[index][login] = profile;
+			(this.db.data.bots)[index]['userProfiles'][login] = profile;
 		}
 		await this.db.write();
 		return 'Done UPDATING';
