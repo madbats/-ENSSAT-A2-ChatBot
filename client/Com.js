@@ -81,10 +81,17 @@ function recupBots() {
 
     fetch(myURL, myInit)
         .then((httpResponse) => {
-            for (let field of httpResponse.headers) {
+            if(httpResponse.ok)
+            {
+                for (let field of httpResponse.headers) {
                 console.log(`raw = ${field}`);
+                }
+                return httpResponse.json()
             }
-            return httpResponse.json()
+            else
+            {
+                console.log("Mauvaise réponse du réseau");
+            }
         })
         .then((myArrayOfBots) => {
             for (let bot of myArrayOfBots) { //Pour chaque bot disponible
@@ -151,7 +158,14 @@ function changeBot() {
             let myURL = `http://localhost:3001/${idBot}`; //URL pour obtenir la liste des bots
             fetch(myURL, myInit)
                 .then((httpResponse) => {
-                    return httpResponse.json()
+                    if(httpResponse.ok)
+                    {
+                        return httpResponse.json();
+                    }
+                    else
+                    {
+                        console.log("Mauvaise réponse du réseau");
+                    }
                 })
                 .then((responseBody) => {
                     console.log(`response is ${responseBody}`);
@@ -224,7 +238,14 @@ function newUserMessage() {
         //launch the request
         fetch(myURL, myInit)
             .then((httpResponse) => {
-                return httpResponse.json();
+                if(httpResponse.ok)
+                {
+                    return httpResponse.json();
+                }
+                else
+                {
+                    console.log("Mauvaise réponse du réseau");
+                }
             })
             .then((responseBody) => { //Que fait on avec la réponse du serveur.
                 //On affiche la réponse du bot
@@ -267,7 +288,15 @@ function supprBot(idBot) {
     au lieu de simplement couper la communication*/
     fetch(myURL, myInit)
         .then((httpResponse) => {
-            return httpResponse.json();
+            if(httpResponse.ok)
+            {
+                return httpResponse.json();
+            }
+            else
+            {
+                console.log("Mauvaise réponse du réseau");
+            }
+            
         })
         .then((responseBody) => { //Que fait on avec la réponse du serveur.
             if (responseBody.ok) //Si la requête retourne un succès
