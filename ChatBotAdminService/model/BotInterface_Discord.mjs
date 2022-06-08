@@ -51,7 +51,9 @@ class BotInterface extends BotInterface_Basic {
 		});
 
 		// Login a discord avec le token
+		
 		this.client.login(this.botProfile.option.token);
+		
 	}
 
 	async close() {

@@ -216,7 +216,12 @@
 					//launch the request
 					fetch(myURL, myInit)
 						.then((httpResponse) => {
-							return httpResponse.text();
+							if(httpResponse.ok){
+								return httpResponse.text();
+							}
+							else{
+								throw new Error("Update unsuccesful")
+							}
 						})
 						.then((responseBody) => {
 							console.log("Update")

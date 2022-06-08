@@ -41,19 +41,30 @@ app.post('/', (req, res) => {
 					});
 					worker.on('error', (err) => {
 						console.log(`Error ${err} thrown... stack is : ${err.stack}`);
-						throw err;
+						botServiceInstance
+							.removeBot(bot.id);
 					});
-					worker.once('message', (_port) => {
-						// const port = 4000 + id * 100 + encode(login);
-						console.log('Launched');
-						discordBots[bot.id] = worker;
+					worker.once('message', (msg) => {
+						if(msg == 'error'){
+							console.log(`Bot failed to load due to invalide token: ${bot.id}`);
+							botServiceInstance
+								.removeBot(bot.id);
+							res.status(400).send('BAD REQUEST');
+						}else{
+							console.log('Launched');
+							discordBots[bot.id] = worker;
+							res.status(201).send('All is OK');
+						}
 					});
 
 				} catch (err) {
 					console.log(`Error ${err} thrown... stack is : ${err.stack}`);
+					res.status(400).send('BAD REQUEST');
 				}
 			}
-			res.status(201).send('All is OK');
+			else{
+				res.status(201).send('All is OK');
+			}
 		})
 		.catch((err) => {
 			console.log(`Error ${err} thrown... stack is : ${err.stack}`);
@@ -69,15 +80,15 @@ app.delete('/:id', (req, res) => {
 		//not the expected parameter
 		res.status(400).send('BAD REQUEST');
 	} else {
+		if (botServiceInstance.getBot(id).interface == 'discord') {
+			if (discordBots[id] != undefined) {
+				discordBots[id].postMessage('close');
+			}
+		}
 		botServiceInstance.removeBot(id)
 			.then((returnString) => {
 				console.log(returnString);
 				// si le bot est de type discord alors il doit être arreté
-				if (botServiceInstance.getBot(id).interface == 'discord') {
-					if (discordBots[id] != undefined) {
-						discordBots[id].postMessage('close');
-					}
-				}
 				res.status(201).send('All is OK');
 			})
 			.catch((err) => {
@@ -96,6 +107,7 @@ app.put('/:id', (req, res) => {
 		res.status(400).send('BAD REQUEST');
 	} else {
 		let newValues = req.body; //the client is responsible for formating its request with proper syntax.
+		let oldBot = botServiceInstance.getBot(id);
 		botServiceInstance
 			.updateBot(id, newValues)
 			.then((returnString) => {
@@ -115,10 +127,19 @@ app.put('/:id', (req, res) => {
 							});
 							worker.on('error', (err) => {
 								console.log(`Error ${err} thrown... stack is : ${err.stack}`);
-								throw err;
+								// res.status(400).send('BAD REQUEST');
 							});
-							worker.once('message', (_port) => {
-								discordBots[bot.id] = worker;
+							worker.once('message',  (msg) => {
+								// const port = 4000 + id * 100 + encode(login);
+								if(msg == 'error'){
+									console.log(`Bot failed to load due to invalide token: ${bot.id}`);
+									botServiceInstance
+										.updateBot(id, oldBot);
+									res.status(400).send('BAD REQUEST');
+								}else{
+									console.log('Launched');
+									discordBots[bot.id] = worker;
+								}
 							});
 
 						} catch (err) {
@@ -189,7 +210,7 @@ app.post('/:id', async (req, res) => {
 					});
 					worker.on('error', (err) => {
 						console.log(`Error ${err} thrown... stack is : ${err.stack}`);
-						throw err;
+						// throw err;
 					});
 					worker.once('message', (port) => {
 						// const port = 4000 + id * 100 + encode(login);
@@ -229,12 +250,16 @@ BotService.create().then(ts => {
 				});
 				worker.on('error', (err) => {
 					console.log(`Error ${err} thrown... stack is : ${err.stack}`);
-					throw err;
+					// throw err;
 				});
-				worker.once('message', (_port) => {
+				worker.once('message', (msg) => {
 					// const port = 4000 + id * 100 + encode(login);
-					console.log('Launched');
-					discordBots[bot.id] = worker;
+					if(msg == 'error'){
+						console.log(`Bot failed to load due to invalide token: ${bot.id}`);
+					}else{
+						console.log('Launched');
+						discordBots[bot.id] = worker;
+					}
 				});
 
 			} catch (err) {

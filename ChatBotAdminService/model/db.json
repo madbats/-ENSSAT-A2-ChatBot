@@ -1,12 +1,11 @@
 {
   "bots": [
     {
-      "id": 7,
-      "name": "Darth Vader",
+      "id": 3,
+      "name": "Hello",
       "template": "standard",
       "option": {
-        "token": "",
-        "reply": "true"
+        "token": ""
       },
       "interface": "local",
       "userProfiles": {
