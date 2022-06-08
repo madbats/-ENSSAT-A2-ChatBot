@@ -9,7 +9,185 @@
         "reply": "true"
       },
       "interface": "local",
-      "userProfiles": {},
+      "userProfiles": {
+        "Kanard": {
+          "topic": "random",
+          "__initialmatch__": "(what is my name|who am i|do you know my name|do you know who i am){weight=10}",
+          "__history__": {
+            "input": [
+              "what is my name",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ],
+            "reply": [
+              "Your name is undefined.",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ]
+          },
+          "__lastmatch__": "(what is my name|who am i|do you know my name|do you know who i am){weight=10}",
+          "__last_triggers__": [
+            {
+              "trigger": "(what is my name|who am i|do you know my name|do you know who i am){weight=10}",
+              "reply": [
+                "Your name is <get name>.",
+                "You told me your name is <get name>.",
+                "Aren't you <get name>?"
+              ],
+              "condition": [],
+              "redirect": null,
+              "previous": null
+            }
+          ]
+        },
+        "K": {
+          "topic": "random",
+          "__initialmatch__": "my name is *",
+          "__history__": {
+            "input": [
+              "my name is matt",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ],
+            "reply": [
+              "Matt, nice to meet you.",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ]
+          },
+          "__lastmatch__": "my name is *",
+          "__last_triggers__": [
+            {
+              "trigger": "my name is *",
+              "reply": [
+                "<set name=<formal>>Nice to meet you, <get name>.",
+                "<set name=<formal>><get name>, nice to meet you."
+              ],
+              "condition": [],
+              "redirect": null,
+              "previous": null
+            }
+          ],
+          "name": "Matt"
+        },
+        "L": null,
+        "Camille": {
+          "topic": "random",
+          "__initialmatch__": "my name is *",
+          "__history__": {
+            "input": [
+              "my name is camille",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ],
+            "reply": [
+              "Nice to meet you, Camille.",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ]
+          },
+          "__lastmatch__": "my name is *",
+          "__last_triggers__": [
+            {
+              "trigger": "my name is *",
+              "reply": [
+                "<set name=<formal>>Nice to meet you, <get name>.",
+                "<set name=<formal>><get name>, nice to meet you."
+              ],
+              "condition": [],
+              "redirect": null,
+              "previous": null
+            }
+          ],
+          "name": "Camille"
+        },
+        "Matthieu": {
+          "topic": "random",
+          "__initialmatch__": "my name is *",
+          "__history__": {
+            "input": [
+              "my name is matt",
+              "what is my name",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ],
+            "reply": [
+              "Matt, nice to meet you.",
+              "You told me your name is undefined.",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ]
+          },
+          "__lastmatch__": "my name is *",
+          "__last_triggers__": [
+            {
+              "trigger": "my name is *",
+              "reply": [
+                "<set name=<formal>>Nice to meet you, <get name>.",
+                "<set name=<formal>><get name>, nice to meet you."
+              ],
+              "condition": [],
+              "redirect": null,
+              "previous": null
+            }
+          ],
+          "name": "Matt"
+        }
+      },
       "user": null
     },
     {
@@ -22,7 +200,10 @@
       },
       "interface": "local",
       "userProfiles": {
-        "azerty": null
+        "azerty": null,
+        "Kanard": null,
+        "K": null,
+        "L": null
       },
       "user": null
     }

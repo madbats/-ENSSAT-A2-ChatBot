@@ -61,7 +61,8 @@ function recupBots() {
     listeBot.innerHTML = "<option></option>";
     listeIDBot = [];
     comLinks = [];
-
+    document.getElementById("login").disabled = false
+    document.getElementById("listeBot").disabled = false
     //On demande au serveur la liste des bots disponibles
     //On crée la requête
     let myHeaders = new Headers();
@@ -121,9 +122,9 @@ function changeBot() {
     console.log("Changement de bot");
     choice = listeBot.selectedIndex;
     console.log(`Valeur de choice : ${choice} ${inLogin.value}`);
+
     if (choice > 0 && inLogin.value != "") //Si un bot est sélectionné
     {
-
         if (comLinks[choice - 1] == -1) //Si un chatBot avec ce bot n'existe pas déjà, on le crée
         {
             console.log("on crée un nouveau chatbot");
@@ -158,6 +159,8 @@ function changeBot() {
                     comLinks[choice - 1] = responseBody.link;
                     document.getElementById("sendMessageButton").disabled = false
                     document.getElementById("input").disabled = false
+                    document.getElementById("login").disabled = true
+                    document.getElementById("listeBot").disabled = true
                     //Récupération du lien permettant de communiquer avec le bot
                 })
                 .catch((err) => {
@@ -168,6 +171,8 @@ function changeBot() {
             console.log("On reprend la communication avec un bot");
             document.getElementById("sendMessageButton").disabled = false
             document.getElementById("input").disabled = false
+            document.getElementById("login").disabled = true
+            document.getElementById("listeBot").disabled = true
         }
 
     }
@@ -286,6 +291,8 @@ function supprBot(idBot) {
 function supprBots() {
     console.log("Début suppression des communications actives")
     //On supprime les communications existantes avec les chatbots.
+
+
     for (let i of listeIDBot) {
         supprBot(i);
     }
