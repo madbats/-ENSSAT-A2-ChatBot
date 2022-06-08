@@ -21,7 +21,9 @@
         "reply": "true"
       },
       "interface": "local",
-      "userProfiles": {},
+      "userProfiles": {
+        "azerty": null
+      },
       "user": null
     }
   ]
