@@ -186,7 +186,51 @@
             }
           ],
           "name": "Matt"
-        }
+        },
+        "H": {
+          "topic": "random",
+          "__initialmatch__": "(hello|hi|hey|howdy|hola|hai|yo) [*]",
+          "__history__": {
+            "input": [
+              "hello",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ],
+            "reply": [
+              "How do you do. Please state your problem.",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined",
+              "undefined"
+            ]
+          },
+          "__lastmatch__": "(hello|hi|hey|howdy|hola|hai|yo) [*]",
+          "__last_triggers__": [
+            {
+              "trigger": "(hello|hi|hey|howdy|hola|hai|yo) [*]",
+              "reply": [
+                "How do you do. Please state your problem.",
+                "Hi. What seems to be your problem?"
+              ],
+              "condition": [],
+              "redirect": null,
+              "previous": null
+            }
+          ]
+        },
+        "Lord": null
       },
       "user": null
     },
@@ -206,6 +250,18 @@
         "L": null
       },
       "user": null
+    },
+    {
+      "id": 9,
+      "name": "Newby",
+      "template": "standard",
+      "option": {
+        "token": ""
+      },
+      "interface": "local",
+      "userProfiles": {
+        "Lord": null
+      }
     }
   ]
 }

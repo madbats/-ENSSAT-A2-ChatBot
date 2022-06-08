@@ -158,14 +158,14 @@ function changeBot() {
             let myURL = `http://localhost:3001/${idBot}`; //URL pour obtenir la liste des bots
             fetch(myURL, myInit)
                 .then((httpResponse) => {
-                    if(httpResponse.ok)
-                    {
+                    /*if(httpResponse.ok)
+                    {*/
                         return httpResponse.json();
-                    }
+                   /* }
                     else
                     {
                         console.log("Mauvaise réponse du réseau");
-                    }
+                    }*/
                 })
                 .then((responseBody) => {
                     console.log(`response is ${responseBody}`);
