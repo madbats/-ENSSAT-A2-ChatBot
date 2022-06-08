@@ -14,7 +14,9 @@ class BotInterface extends BotInterface_Basic {
 
 
 	async loadBot() {
+		console.log('Loading...');
 		super.loadBot();
+		console.log('...Loading...');
 		this.client = new Client({
 			intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
 		});
@@ -24,6 +26,7 @@ class BotInterface extends BotInterface_Basic {
 			console.log('Ready!');
 		});
 
+		console.log('...Messages...');
 		this.client.on('messageCreate', async interaction => {
 			// Si l'interaction provient du bot lui même
 			if (interaction.author.bot) return;

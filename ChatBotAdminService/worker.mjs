@@ -92,6 +92,24 @@ if (basicBot.interface == 'local') {
 				process.exit();
 			});
 		});
+	}
+	else if (msg == 'update'){		
+		console.log('Updating BotInterface');
+		bot.getUservars().then((vars) => {
+			console.log(JSON.stringify(vars));
+			botService.updateUserProfiles(id, login, vars).then(async () => {
+				await bot.close();
+				console.log('And out !');
+				var basicBot = botService.getBot(id);
+				
+				bot = new BotInterface(basicBot,login);
+				
+				bot.loadBot();
+			});
+		});
+		
+	}
+});
 
 	});
 
